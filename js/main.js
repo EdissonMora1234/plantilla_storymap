@@ -1,27 +1,31 @@
 document.addEventListener('DOMContentLoaded', function() {
-    var map = L.map('map').setView([0, 0], 2);
+    // Inicializar el mapa centrado en las coordenadas de la primera diapositiva
+    var map = L.map('map').setView([40.7128, -74.0060], 12);
 
+    // Agregar capa base de OpenStreetMap
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         maxZoom: 19
     }).addTo(map);
 
+    // Manejar las diapositivas
     var slides = document.querySelectorAll('.slide');
     slides.forEach(function(slide) {
         slide.addEventListener('click', function() {
-            var lat = slide.getAttribute('data-lat');
-            var lng = slide.getAttribute('data-lng');
-            var zoom = slide.getAttribute('data-zoom');
+            var lat = parseFloat(slide.getAttribute('data-lat'));
+            var lng = parseFloat(slide.getAttribute('data-lng'));
+            var zoom = parseInt(slide.getAttribute('data-zoom'));
             map.setView([lat, lng], zoom);
         });
     });
 
-    // Integrar servicios WMS o WFS de GeoServer
+    // Integrar servicios WMS de GeoServer
     var wmsLayer = L.tileLayer.wms('https://geoserver.scrd.gov.co/geoserver/Espacios_culturales_Cultured_Maps/wms', {
-        layers: 'workspace:layername',
+        layers: 'Espacios_culturales_Cultured_Maps:Auditorios',
         format: 'image/png',
         transparent: true
     }).addTo(map);
 
+    // Si no necesitas WFS, elimina el siguiente código
     var wfsLayer = L.geoJSON(null, {
         // Opciones para WFS
     });
